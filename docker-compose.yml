@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+
+    mysql:
+        build: mysql/
+        volumes:
+            - ./volumenes/bbdd:/var/lib/mysql
+        command: --innodb-use-native-aio=0
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            # MYSQL_USER: 'dwes'
+            # MYSQL_PASSWORD: 'dwes'
+            MYSQL_DATABASE: 'demo'
+
+    tomcat:
+        build: tomcat/
+        ports:
+            - 80:8080
+        depends_on:
+            - mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - 8080:80   
+        environment:
+            PMA_HOST: mysql
+        depends_on:
+            - mysql 
